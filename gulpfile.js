@@ -4,12 +4,12 @@ var webserver = require('gulp-webserver');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var minifyhtml = require('gulp-minify-html');
-var sass = require('gulp-sass');
+// var sass = require('gulp-sass');
 var livereload = require('gulp-livereload');
 var stripDebug = require('gulp-strip-debug');
 var browserSync = require('browser-sync').create();
 var sourcemaps = require('gulp-sourcemaps');
-var babel = require('gulp-babel');
+// var babel = require('gulp-babel');
 var scss = require('gulp-sass');
 
 var path = {
@@ -21,6 +21,9 @@ var path = {
     },
     dist: {
         root : 'dist/',
+        css: 'dist/css/',
+        js: 'dist/js',
+        img: 'dist/img'
     }
 };
 
@@ -72,19 +75,19 @@ gulp.task('build-js', function () {
         // stripDebug : 모든 console.log, alert 제거
         // .pipe(stripDebug())
         .pipe(sourcemaps.init())
-        .pipe(babel({
-            presets: ['es2015','react']
-        }))
+        // .pipe(babel({
+        //     presets: ['es2015','react']
+        // }))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest(path.dist.doc))
+        .pipe(gulp.dest(path.dist.js))
         .pipe(browserSync.stream());
 });
 
 
 // copy images
 gulp.task('copy-img', function(){
-    gulp.src([path.src.doc + 'img/**/*'])
-        .pipe(gulp.dest(path.dist.doc + 'img'))
+    gulp.src([path.src.img + 'img/**/*'])
+        .pipe(gulp.dest(path.dist + 'img'))
         .pipe(browserSync.stream());
 });
 
@@ -97,27 +100,32 @@ gulp.task('serve', function () {
     browserSync.init({
         browser: ["chrome"],
         server: {
-            baseDir: path.dist.doc
+            baseDir: path.dist.root
         },
         port: config.port,
-        index : "html/index.html"
+        index : "index.html"
     });
 
 });
 
 // 파일 변경 감지 및 브라우저 재시작
 gulp.task('watch', function () {
-    gulp.watch(path.src.root + '**/*.scss', ['build-sass']).on('change', browserSync.reload);
-    gulp.watch(path.src.root + '**/*.js', ['build-js']).on('change', browserSync.reload);
-    gulp.watch(path.src.root + '**/*.html', ['copy-html']).on('change', browserSync.reload);
+    gulp.watch(path.src.root + '**/*.scss', gulp.parallel('build-sass')).on('change', browserSync.reload);
+    gulp.watch(path.src.root + '**/*.js', gulp.parallel('build-js')).on('change', browserSync.reload);
+    gulp.watch(path.src.root + '**/*.html', gulp.parallel('copy-html')).on('change', browserSync.reload);
     // gulp.watch(path.src.root + 'img/**/*', ['copy-img']).on('change', browserSync.reload);
-    gulp.watch(path.src + '*.html', ['copy-html']).on('change', browserSync.reload)
+    gulp.watch(path.src + '*.html', gulp.parallel('copy-html')).on('change', browserSync.reload)
 });
 
-gulp.task('build',['copy-html', 'build-js', 'build-sass', 'copy-img'], function(){
+gulp.task('build',gulp.parallel('copy-html', 'build-js', 'build-sass', 'copy-img'), function(){
     console.log('build...');
 });
 
-gulp.task('default', ['clean', 'build', 'serve', 'watch'], function () {
+gulp.task('default', gulp.parallel('clean', 'build', 'serve', 'watch'), function () {
+    console.log('시작');
     console.log('default [clean -> build_development -> serve -> watch]');
+});
+
+gulp.task('test', function () {
+    console.log('시작');
 });
