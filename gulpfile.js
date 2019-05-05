@@ -15,7 +15,7 @@ var scss = require('gulp-sass');
 var path = {
     src: {
         root: 'src/',
-        scss: 'src/scss/',
+        scss: 'src/sass/',
         js: 'src/js',
         img: 'src/img'
     },
@@ -47,13 +47,13 @@ var scssOptions = {
 
 gulp.task('copy-html', function(){
     // index.html 복사
-    gulp.src([path.src.root + '*.html'])
+    gulp.src([path.src.root + '**/*.html'])
         .pipe(gulp.dest(path.dist.root))
         .pipe(browserSync.stream());
 });
 
 gulp.task('build-sass', function () {
-    console.log('build_sass...');
+    console.log('build sass...');
     return gulp.src([path.src.scss + '**/*.scss'])
         // 소스맵 초기화
         .pipe(sourcemaps.init())
@@ -79,7 +79,7 @@ gulp.task('build-js', function () {
         //     presets: ['es2015','react']
         // }))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest(path.dist.js))
+        .pipe(gulp.dest(path.dist.root))
         .pipe(browserSync.stream());
 });
 
@@ -114,7 +114,7 @@ gulp.task('watch', function () {
     gulp.watch(path.src.root + '**/*.js', gulp.parallel('build-js')).on('change', browserSync.reload);
     gulp.watch(path.src.root + '**/*.html', gulp.parallel('copy-html')).on('change', browserSync.reload);
     // gulp.watch(path.src.root + 'img/**/*', ['copy-img']).on('change', browserSync.reload);
-    gulp.watch(path.src + '*.html', gulp.parallel('copy-html')).on('change', browserSync.reload)
+    // gulp.watch(path.src + '*.html', gulp.parallel('copy-html')).on('change', browserSync.reload)
 });
 
 gulp.task('build',gulp.parallel('copy-html', 'build-js', 'build-sass', 'copy-img'), function(){

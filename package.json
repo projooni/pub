@@ -27,6 +27,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-strip-debug": "^3.0.0",
     "gulp-uglify": "^3.0.2",
-    "gulp-webserver": "^0.9.1"
+    "gulp-webserver": "^0.9.1",
+    "jquery": "^3.4.1"
   }
 }
