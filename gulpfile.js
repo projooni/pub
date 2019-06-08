@@ -49,7 +49,14 @@ gulp.task('copy-html', function(){
     // index.html 복사
     gulp.src([path.src.root + '**/*.html'])
         .pipe(gulp.dest(path.dist.root))
-        .pipe(browserSync.stream());
+        // .pipe(browserSync.reload({stream: true}));
+        // .pipe(browserSync.reload());
+        // done();
+});
+
+gulp.task('watch-html', gulp.parallel('copy-html'), function(){
+    browserSync.reload();
+    done();
 });
 
 gulp.task('copy-css', function(){
@@ -119,7 +126,7 @@ gulp.task('serve', function () {
 gulp.task('watch', function () {
     gulp.watch(path.src.root + '**/*.scss', gulp.parallel('build-sass')).on('change', browserSync.reload);
     gulp.watch(path.src.root + '**/*.js', gulp.parallel('build-js')).on('change', browserSync.reload);
-    gulp.watch(path.src.root + '**/*.html', gulp.parallel('copy-html')).on('change', browserSync.reload);
+    gulp.watch(path.src.root + '**/*.html', gulp.parallel('watch-html'));
     gulp.watch(path.src.root + '**/*.css', gulp.parallel('copy-css')).on('change', browserSync.reload);
     // gulp.watch(path.src.root + 'img/**/*', ['copy-img']).on('change', browserSync.reload);
     // gulp.watch(path.src + '*.html', gulp.parallel('copy-html')).on('change', browserSync.reload)
