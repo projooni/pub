@@ -45,28 +45,24 @@ var scssOptions = {
     sourceComments: true
 };
 
-gulp.task('copy-html', function(){
+gulp.task('copy-html', function(done){
     // index.html 복사
     gulp.src([path.src.root + '**/*.html'])
         .pipe(gulp.dest(path.dist.root))
         // .pipe(browserSync.reload({stream: true}));
         // .pipe(browserSync.reload());
-        // done();
+        done();
 });
 
-gulp.task('watch-html', gulp.parallel('copy-html'), function(){
-    browserSync.reload();
-    done();
-});
-
-gulp.task('copy-css', function(){
+gulp.task('copy-css', function(done){
     // index.html 복사
     gulp.src([path.src.root + '**/*.css'])
         .pipe(gulp.dest(path.dist.root))
         .pipe(browserSync.stream());
+        done();
 });
 
-gulp.task('build-sass', function () {
+gulp.task('build-sass', function (done) {
     console.log('build sass...');
     return gulp.src([path.src.scss + '**/*.scss'])
         // 소스맵 초기화
@@ -81,9 +77,10 @@ gulp.task('build-sass', function () {
         // dest 설정
         .pipe(gulp.dest(path.dist.root + 'css/'))
         .pipe(browserSync.stream());
+        done();
 });
 
-gulp.task('build-js', function () {
+gulp.task('build-js', function (done) {
     console.log('build_js...');
     return gulp.src([path.src.js + '**/*.js'])
         // stripDebug : 모든 console.log, alert 제거
@@ -95,18 +92,21 @@ gulp.task('build-js', function () {
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(path.dist.root))
         .pipe(browserSync.stream());
+        done();
 });
 
 
 // copy images
-gulp.task('copy-img', function(){
+gulp.task('copy-img', function(done){
     gulp.src([path.src.img + 'img/**/*'])
         .pipe(gulp.dest(path.dist + 'img'))
         .pipe(browserSync.stream());
+        done();
 });
 
-gulp.task('clean', function () {
-    console.log('clean ...')
+gulp.task('clean', function (done) {
+    console.log('clean ...');
+    done();
 });
 
 gulp.task('serve', function () {
@@ -126,7 +126,7 @@ gulp.task('serve', function () {
 gulp.task('watch', function () {
     gulp.watch(path.src.root + '**/*.scss', gulp.parallel('build-sass')).on('change', browserSync.reload);
     gulp.watch(path.src.root + '**/*.js', gulp.parallel('build-js')).on('change', browserSync.reload);
-    gulp.watch(path.src.root + '**/*.html', gulp.parallel('watch-html'));
+    gulp.watch(path.src.root + '**/*.html', gulp.parallel('copy-html')).on('change', browserSync.reload);
     gulp.watch(path.src.root + '**/*.css', gulp.parallel('copy-css')).on('change', browserSync.reload);
     // gulp.watch(path.src.root + 'img/**/*', ['copy-img']).on('change', browserSync.reload);
     // gulp.watch(path.src + '*.html', gulp.parallel('copy-html')).on('change', browserSync.reload)

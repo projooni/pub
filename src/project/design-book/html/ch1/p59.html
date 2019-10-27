@@ -1,0 +1,42 @@
+<!-- <link rel="stylesheet" href="../../css/grid-guide.css"> -->
+
+<style>
+    .boxA{
+    border: 8px solid #00a0e9;
+    background-color: #a0e0fe;
+    color: #00a0e9;
+    }
+    .boxA .box1{
+        border: 8px solid #e0e03d;
+        background-color: #ffffee;
+        color: #e0e03d;
+        line-height: 200px;
+    }
+    .boxA .box2{
+        border: 8px solid #eb6867;
+        background-color: #ffc2c9;
+        color: #eb6877;
+        line-height: 100px;
+    }
+
+    /* 박스를 중첩하는 설정 */
+    .boxA {
+        position: relative;
+    }
+    .box2 {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+</style>
+
+
+
+<div class="boxA">
+    <div class="box1">
+        BOX1
+    </div>
+    <div class="box2">
+        BOX2
+    </div>
+</div>
